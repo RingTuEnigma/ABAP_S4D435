@@ -1,37 +1,50 @@
-class ZCL_02_D_TRAVELNUMBER definition
-  public
-  inheriting from /BOBF/CL_LIB_D_SUPERCL_SIMPLE
-  final
-  create public .
+CLASS zcl_02_d_travelnumber DEFINITION
+  PUBLIC
+  INHERITING FROM /bobf/cl_lib_d_supercl_simple
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  methods /BOBF/IF_FRW_DETERMINATION~EXECUTE
-    redefinition .
-protected section.
-private section.
+    METHODS /bobf/if_frw_determination~execute
+        REDEFINITION .
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 
-CLASS ZCL_02_D_TRAVELNUMBER IMPLEMENTATION.
+CLASS zcl_02_d_travelnumber IMPLEMENTATION.
 
 
-  method /BOBF/IF_FRW_DETERMINATION~EXECUTE.
+  METHOD /bobf/if_frw_determination~execute.
 
-*      DATA travel TYPE REF TO zs02i_traveltp.
-*
-*    travel->travelagency = cl_s4d435_model=>get_next_travelid_for_agency( ).
-*
-*    LOOP AT it_key REFERENCE INTO DATA(key).
-*      io_modify->update(
-*        EXPORTING
-*          iv_node           = is_ctx-node_key
-*          iv_key            = key->key
-*          is_data           = travel
-*          it_changed_fields = VALUE #( ( if_d435c_i_traveltp_c=>sc_node_attribute-d435c_i_traveltp-travelagency ) )
-*      ).
-*    ENDLOOP.
+    DATA travels TYPE zt02i_traveltp.
 
-  endmethod.
+    io_read->retrieve(
+      EXPORTING
+        iv_node                 = is_ctx-node_key
+        it_key                  = it_key
+      IMPORTING
+        et_data                 = travels
+    ).
+
+    LOOP AT travels REFERENCE INTO DATA(travel).
+
+      IF travel->travelnumber IS INITIAL.
+        travel->travelnumber = cl_s4d435_model=>get_next_travelid_for_agency( iv_agencynum = travel->travelagency ).
+
+        io_modify->update(
+          EXPORTING
+            iv_node           = is_ctx-node_key
+            iv_key            = travel->key
+*            iv_root_key       =
+            is_data           = travel
+            it_changed_fields = VALUE #( ( if_d435c_i_traveltp_c=>sc_node_attribute-d435c_i_traveltp-travelnumber ) )
+        ).
+
+      ENDIF.
+    ENDLOOP.
+
+  ENDMETHOD.
 ENDCLASS.
