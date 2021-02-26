@@ -1,0 +1,15 @@
+{
+"BASEINFO":
+{
+"FROM":
+[
+"Z02_TRITEM"
+],
+"ASSOCIATED":
+[
+"Z02_I_TRAVEL"
+],
+"BASE":
+[]
+}
+}

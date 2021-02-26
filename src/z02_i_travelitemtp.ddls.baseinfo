@@ -1,0 +1,15 @@
+{
+"BASEINFO":
+{
+"FROM":
+[
+"Z02_I_TRAVELITEM"
+],
+"ASSOCIATED":
+[
+"Z02_I_TRAVELTP"
+],
+"BASE":
+[]
+}
+}
